@@ -21,6 +21,9 @@ export class SignUpInput {
   @IsNotEmpty()
   lastName: string;
 
+  @Field({ nullable: true })
+  companyName?: string;
+
   @Field(() => UserRole)
   @IsEnum(UserRole)
   role: UserRole;

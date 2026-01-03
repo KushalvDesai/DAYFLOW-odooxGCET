@@ -57,7 +57,7 @@ export class AuthService {
   }
 
   async signUp(signUpInput: SignUpInput): Promise<{ message: string; success: boolean }> {
-    const { email, password, firstName, lastName, joiningDate, ...rest } = signUpInput;
+    const { email, password, firstName, lastName, joiningDate, companyName, ...rest } = signUpInput;
 
     // Check if email already exists in actual users
     const existingUser = await this.userModel.findOne({ email });
@@ -90,6 +90,7 @@ export class AuthService {
       password: hashedPassword,
       firstName,
       lastName,
+      companyName,
       joiningDate: joiningDate || new Date(),
       ...rest,
       emailVerificationOTP: otp,
@@ -145,6 +146,7 @@ export class AuthService {
       password: pendingUser.password,
       firstName: pendingUser.firstName,
       lastName: pendingUser.lastName,
+      companyName: pendingUser.companyName,
       phone: pendingUser.phoneNumber, // Note: User schema uses 'phone', not 'phoneNumber'
       address: pendingUser.address,
       department: pendingUser.department,

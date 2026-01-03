@@ -22,6 +22,9 @@ export class PendingUser {
   lastName: string;
 
   @Prop()
+  companyName?: string;
+
+  @Prop()
   phoneNumber?: string;
 
   @Prop()

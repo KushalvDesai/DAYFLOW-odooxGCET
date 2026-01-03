@@ -38,7 +38,7 @@ export class AttendanceResolver {
         ? `Checked in successfully! You are late by ${attendance.lateByMinutes} minutes.`
         : 'Checked in successfully!',
       success: true,
-      attendance: attendance.toObject(),
+      attendance,
     };
   }
 
@@ -56,7 +56,7 @@ export class AttendanceResolver {
     return {
       message: `Checked out successfully! Total work hours: ${attendance.workHours} hours`,
       success: true,
-      attendance: attendance.toObject(),
+      attendance,
       workHours: attendance.workHours,
     };
   }

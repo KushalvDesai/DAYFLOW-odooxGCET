@@ -34,6 +34,9 @@ export class User {
   @Prop({ required: true })
   lastName: string;
 
+  @Prop()
+  companyName?: string;
+
   @Prop({ type: String, enum: UserRole, default: UserRole.EMPLOYEE })
   role: UserRole;
 
@@ -96,6 +99,9 @@ export class UserType {
 
   @Field()
   lastName: string;
+
+  @Field({ nullable: true })
+  companyName?: string;
 
   @Field(() => UserRole)
   role: UserRole;

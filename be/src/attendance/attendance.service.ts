@@ -63,7 +63,7 @@ export class AttendanceService {
     return { isLate: false, lateByMinutes: 0 };
   }
 
-  async checkIn(userId: string, checkInInput: CheckInInput): Promise<AttendanceDocument> {
+  async checkIn(userId: string, checkInInput: CheckInInput): Promise<any> {
     // Get user details
     const user = await this.userModel.findById(userId);
     if (!user) {
@@ -100,10 +100,10 @@ export class AttendanceService {
       remarks: checkInInput.remarks,
     });
 
-    return attendance;
+    return attendance.toObject();
   }
 
-  async checkOut(userId: string, checkOutInput: CheckOutInput): Promise<AttendanceDocument> {
+  async checkOut(userId: string, checkOutInput: CheckOutInput): Promise<any> {
     const today = this.getStartOfDay(new Date());
     const endOfDay = this.getEndOfDay(new Date());
 
@@ -140,23 +140,25 @@ export class AttendanceService {
     }
 
     await attendance.save();
-    return attendance;
+    return attendance.toObject();
   }
 
-  async getTodayAttendance(userId: string): Promise<AttendanceDocument | null> {
+  async getTodayAttendance(userId: string): Promise<any> {
     const today = this.getStartOfDay(new Date());
     const endOfDay = this.getEndOfDay(new Date());
 
-    return this.attendanceModel.findOne({
+    const attendance = await this.attendanceModel.findOne({
       userId,
       date: { $gte: today, $lte: endOfDay },
     });
+
+    return attendance ? attendance.toObject() : null;
   }
 
   async getAttendanceByDateRange(
     userId: string,
     input: GetAttendanceByDateRangeInput,
-  ): Promise<AttendanceDocument[]> {
+  ): Promise<any[]> {
     const { startDate, endDate, employeeId } = input;
 
     const query: any = {
@@ -174,16 +176,18 @@ export class AttendanceService {
       query.userId = userId;
     }
 
-    return this.attendanceModel
+    const records = await this.attendanceModel
       .find(query)
       .sort({ date: -1 })
       .exec();
+
+    return records.map(record => record.toObject());
   }
 
   async getAllAttendance(
     startDate?: Date,
     endDate?: Date,
-  ): Promise<AttendanceDocument[]> {
+  ): Promise<any[]> {
     const query: any = {};
 
     if (startDate && endDate) {
@@ -193,10 +197,12 @@ export class AttendanceService {
       };
     }
 
-    return this.attendanceModel
+    const records = await this.attendanceModel
       .find(query)
       .sort({ date: -1 })
       .exec();
+
+    return records.map(record => record.toObject());
   }
 
   async getAttendanceSummary(
@@ -256,7 +262,7 @@ export class AttendanceService {
 
   async updateAttendance(
     input: UpdateAttendanceInput,
-  ): Promise<AttendanceDocument> {
+  ): Promise<any> {
     const { attendanceId, status, remarks } = input;
 
     const attendance = await this.attendanceModel.findById(attendanceId);
@@ -274,7 +280,7 @@ export class AttendanceService {
     }
 
     await attendance.save();
-    return attendance;
+    return attendance.toObject();
   }
 
   async deleteAttendance(attendanceId: string): Promise<boolean> {

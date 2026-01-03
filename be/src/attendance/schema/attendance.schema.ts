@@ -53,6 +53,12 @@ export class Attendance {
 
   @Prop()
   location?: string;
+
+  @Prop()
+  createdAt: Date;
+
+  @Prop()
+  updatedAt: Date;
 }
 
 export const AttendanceSchema = SchemaFactory.createForClass(Attendance);
